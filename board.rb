@@ -42,7 +42,7 @@ class Board
   # end
 
   def check_for_winner(coordinates)
-    if horizontal_winner?(coordinates) || vertical_winner?(coordinates)
+    if horizontal_winner?(coordinates) || vertical_winner?(coordinates) || backslash_diagonal_winner?(coordinates) || forwardslash_diagonal_winner?(coordinates)
       puts "Winner!"
       return true
     end
@@ -92,7 +92,48 @@ class Board
     return win_counter == 4
   end
 
-  # def horizontal_winner?(coordinates)
-  # end
+  def backslash_diagonal_winner?(coordinates)
+    win_counter = 1
+    index_counter = 1
+    row = coordinates[0]
+    col = coordinates[1]
+    while win_counter < 4
+      if on_board?(row+index_counter, col+index_counter) && @board[row][col].marker == @board[row+index_counter][col+index_counter].marker
+        win_counter += 1
+        if index_counter < 0
+          index_counter -= 1
+        else
+          index_counter += 1
+        end
+      elsif index_counter < 0
+        break
+      else
+        index_counter = -1
+      end
+    end
+    return win_counter == 4
+  end
+
+  def forwardslash_diagonal_winner?(coordinates)
+    win_counter = 1
+    index_counter = 1
+    row = coordinates[0]
+    col = coordinates[1]
+    while win_counter < 4
+      if on_board?(row-index_counter, col+index_counter) && @board[row][col].marker == @board[row-index_counter][col+index_counter].marker
+        win_counter += 1
+        if index_counter < 0
+          index_counter -= 1
+        else
+          index_counter += 1
+        end
+      elsif index_counter < 0
+        break
+      else
+        index_counter = -1
+      end
+    end
+    return win_counter == 4
+  end
 
 end

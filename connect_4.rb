@@ -25,7 +25,6 @@ class Connect_4
     move = gets.chomp.to_i - 1
     (@game_board.board.length-1).downto(0) do |row|
       if !@game_board.board[row][move].has_marker? && @game_board.on_board?(row, move)
-       # && !@game_board.board_full?
         @game_board.board[row][move].marker = player
         @last_move = [row,move]
         return true
@@ -35,6 +34,7 @@ class Connect_4
 
   def play
     while true
+      # board_full?
       puts @player_1_name + "'s turn"
       place_marker(@player_1_marker)
       @game_board.print_board
