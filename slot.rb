@@ -12,7 +12,7 @@ class Slot
     !@marker.strip.empty?
   end
 
-  def place_marker(symbol) #"X" "O" or "Black" "Red"
+  def place_marker(symbol)
     @marker = symbol
   end
 

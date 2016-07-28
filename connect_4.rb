@@ -24,7 +24,7 @@ class Connect_4
     puts "Select a column to drop your marker."
     move = gets.chomp.to_i - 1
     (@game_board.board.length-1).downto(0) do |row|
-      if !@game_board.board[row][move].has_marker? && @game_board.on_board?(move)
+      if !@game_board.board[row][move].has_marker? && @game_board.on_board?(row, move)
        # && !@game_board.board_full?
         @game_board.board[row][move].marker = player
         @last_move = [row,move]

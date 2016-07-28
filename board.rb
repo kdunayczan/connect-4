@@ -33,8 +33,8 @@ class Board
     puts
   end
 
-  def on_board?(col)
-    col >=0 && col <= @col_count-1
+  def on_board?(row, col)
+    (row >=0 && row <= @row_count-1) && (col >=0 && col <= @col_count-1)
   end
 
   # def board_full?
@@ -42,8 +42,7 @@ class Board
   # end
 
   def check_for_winner(coordinates)
-    if horizontal_winner?(coordinates)
-     # || vertical_winner?(coordinates)
+    if horizontal_winner?(coordinates) || vertical_winner?(coordinates)
       puts "Winner!"
       return true
     end
@@ -55,7 +54,7 @@ class Board
     row = coordinates[0]
     col = coordinates[1]
     while win_counter < 4
-      if @board[row][col].marker == @board[row][col[1]+index_counter].marker
+      if on_board?(row, col+index_counter) && @board[row][col].marker == @board[row][col+index_counter].marker
         win_counter += 1
         if index_counter < 0
           index_counter -= 1
@@ -74,9 +73,10 @@ class Board
   def vertical_winner?(coordinates)
     win_counter = 1
     index_counter = 1
-
+    row = coordinates[0]
+    col = coordinates[1]
     while win_counter < 4
-      if @board[coordinates[1]][coordinates[0]].marker == @board[coordinates[1]+index_counter][coordinates[0]].marker
+      if on_board?(row+index_counter, col) && @board[row][col].marker == @board[row + index_counter][col].marker
         win_counter += 1
         if index_counter < 0
           index_counter -= 1
