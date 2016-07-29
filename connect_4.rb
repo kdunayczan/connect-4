@@ -13,11 +13,15 @@ class Connect_4
   end
 
   def get_players_names
+    puts ""
     puts "What is Player 1's name?"
     @player_1_name = gets.chomp.upcase
+    puts ""
     puts "What is Player 2's name?"
     @player_2_name = gets.chomp.upcase
+    puts ""
     puts "Hello #{@player_1_name} and #{@player_2_name}. Let's play Connect-4!"
+    puts ""
   end
 
   def place_marker(player)
@@ -38,31 +42,13 @@ class Connect_4
       puts @player_1_name + "'s turn"
       place_marker(@player_1_marker)
       @game_board.print_board
-      break if @game_board.check_for_winner(@last_move)
+      break if @game_board.check_for_winner(@player_1_name, @last_move)
       puts @player_2_name + "'s turn"
       place_marker(@player_2_marker)
       @game_board.print_board
-      break if @game_board.check_for_winner(@last_move)
+      break if @game_board.check_for_winner(@player_2_name, @last_move)
     end
   end
-
-
-
-  # Players turn
-    # check if valid input: col = 1-10
-    # if valid input, check if column has empty space
-    # if colum has space, place maker
-
-  # 4 in a row vertically
-  # 4 in a row horizontally
-  # 4 in a row diagonally
-  # winner
-  # game over
-  # tie game
-
-  # play
-  # play again
-
 
 end
 
