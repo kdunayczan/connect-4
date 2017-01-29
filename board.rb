@@ -8,7 +8,6 @@ class Board
   def initialize(row_count, col_count)
     @row_count = row_count
     @col_count = col_count
-    @index_counter = 1
     @board = Array.new(row_count) { Array.new(col_count) { Slot.new } }
     print_board
   end
@@ -38,154 +37,58 @@ class Board
     (row >=0 && row <= @row_count-1) && (col >=0 && col <= @col_count-1)
   end
 
-  def board_full?
-    @board.marker.none? { |row| row.include?(" ") }
-  end
-
-  def four_consecutive?(angle)
+  def four_consecutive?(coordinates, checking_method)
     marker_counter = 1
-    @index_counter = 1
+    index_counter = 1
     while marker_counter < 4
-      if angle
+      if checking_method.call(coordinates, index_counter)
         marker_counter += 1
-        if @index_counter < 0
-          @index_counter -= 1
+        if index_counter < 0
+          index_counter -= 1
         else
-          @index_counter += 1
+          index_counter += 1
         end
-      elsif @index_counter < 0
+      elsif index_counter < 0
         break
       else
-        @index_counter = -1
+        index_counter = -1
       end
     end
     return marker_counter == 4
   end
 
-  def horizontal?(coordinates)
+  def horizontal?(coordinates, index_counter)
     row = coordinates[0]
     col = coordinates[1]
-    on_board?(row, col + @index_counter) && @board[row][col].marker == @board[row][col + @index_counter].marker
+    on_board?(row, col + index_counter) && @board[row][col].marker == @board[row][col + index_counter].marker
   end
 
-  def vertical?(coordinates)
+  def vertical?(coordinates, index_counter)
     row = coordinates[0]
     col = coordinates[1]
-    on_board?(row + @index_counter, col) && @board[row][col].marker == @board[row + @index_counter][col].marker
+    on_board?(row + index_counter, col) && @board[row][col].marker == @board[row + index_counter][col].marker
   end
 
-  def forwardslash_diagonal?(coordinates)
+  def forwardslash_diagonal?(coordinates, index_counter)
     row = coordinates[0]
     col = coordinates[1]
-    on_board?(row - @index_counter, col + @index_counter) && @board[row][col].marker == @board[row - @index_counter][col + @index_counter].marker
+    on_board?(row - index_counter, col + index_counter) && @board[row][col].marker == @board[row - index_counter][col + index_counter].marker
   end
 
-  def backslash_diagonal?(coordinates)
+  def backslash_diagonal?(coordinates, index_counter)
     row = coordinates[0]
     col = coordinates[1]
-    on_board?(row + @index_counter, col + @index_counter) && @board[row][col].marker == @board[row + @index_counter][col + @index_counter].marker
+    on_board?(row + index_counter, col + index_counter) && @board[row][col].marker == @board[row + index_counter][col + index_counter].marker
   end
 
   def check_for_winner(player, coordinates)
-    if four_consecutive?( horizontal?(coordinates) ) || four_consecutive?( vertical?(coordinates) ) || four_consecutive?( backslash_diagonal?(coordinates) ) || four_consecutive?( forwardslash_diagonal?(coordinates) )
+    if four_consecutive?( coordinates, method(:horizontal?) ) ||
+      four_consecutive?( coordinates, method(:vertical?) ) ||
+      four_consecutive?( coordinates, method(:backslash_diagonal?) ) ||
+      four_consecutive?( coordinates, method(:forwardslash_diagonal?) )
       puts "#{player} Wins!"
       return true
     end
   end
-
-  # def check_for_winner(player, coordinates)
-  #   if horizontal_winner?(coordinates) || vertical_winner?(coordinates) || backslash_diagonal_winner?(coordinates) || forwardslash_diagonal_winner?(coordinates)
-  #     puts "#{player} Wins!"
-  #     return true
-  #   end
-  # end
-
-  # def horizontal_winner?(coordinates)
-  #   win_counter = 1
-  #   index_counter = 1
-  #   row = coordinates[0]
-  #   col = coordinates[1]
-  #   while win_counter < 4
-  #     if on_board?(row, col+index_counter) && @board[row][col].marker == @board[row][col+index_counter].marker
-  #       win_counter += 1
-  #       if index_counter < 0
-  #         index_counter -= 1
-  #       else
-  #         index_counter += 1
-  #       end
-  #     elsif index_counter < 0
-  #       break
-  #     else
-  #       index_counter = -1
-  #     end
-  #   end
-  #   return win_counter == 4
-  # end
-
-  # def vertical_winner?(coordinates)
-  #   win_counter = 1
-  #   index_counter = 1
-  #   row = coordinates[0]
-  #   col = coordinates[1]
-  #   while win_counter < 4
-  #     if on_board?(row+index_counter, col) && @board[row][col].marker == @board[row + index_counter][col].marker
-  #       win_counter += 1
-  #       if index_counter < 0
-  #         index_counter -= 1
-  #       else
-  #         index_counter += 1
-  #       end
-  #     elsif index_counter < 0
-  #       break
-  #     else
-  #       index_counter = -1
-  #     end
-  #   end
-  #   return win_counter == 4
-  # end
-
-  # def backslash_diagonal_winner?(coordinates)
-  #   win_counter = 1
-  #   index_counter = 1
-  #   row = coordinates[0]
-  #   col = coordinates[1]
-  #   while win_counter < 4
-  #     if on_board?(row+index_counter, col+index_counter) && @board[row][col].marker == @board[row+index_counter][col+index_counter].marker
-  #       win_counter += 1
-  #       if index_counter < 0
-  #         index_counter -= 1
-  #       else
-  #         index_counter += 1
-  #       end
-  #     elsif index_counter < 0
-  #       break
-  #     else
-  #       index_counter = -1
-  #     end
-  #   end
-  #   return win_counter == 4
-  # end
-
-  # def forwardslash_diagonal_winner?(coordinates)
-  #   win_counter = 1
-  #   index_counter = 1
-  #   row = coordinates[0]
-  #   col = coordinates[1]
-  #   while win_counter < 4
-  #     if on_board?(row-index_counter, col+index_counter) && @board[row][col].marker == @board[row-index_counter][col+index_counter].marker
-  #       win_counter += 1
-  #       if index_counter < 0
-  #         index_counter -= 1
-  #       else
-  #         index_counter += 1
-  #       end
-  #     elsif index_counter < 0
-  #       break
-  #     else
-  #       index_counter = -1
-  #     end
-  #   end
-  #   return win_counter == 4
-  # end
 
 end

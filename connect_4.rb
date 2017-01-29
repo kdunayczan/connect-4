@@ -25,8 +25,13 @@ class Connect_4
   end
 
   def place_marker(player)
+    valid = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     puts "Select a column to drop your marker."
-    move = gets.chomp.to_i - 1
+    move = gets.chomp.to_i - 1 
+    while !valid.include?(move) do
+      puts "Please select a valid column"
+      move = gets.chomp.to_i - 1 
+    end
     (@game_board.board.length-1).downto(0) do |row|
       if !@game_board.board[row][move].has_marker? && @game_board.on_board?(row, move)
         @game_board.board[row][move].marker = player
@@ -38,7 +43,6 @@ class Connect_4
 
   def play
     while true
-      # board_full?
       puts @player_1_name + "'s turn"
       place_marker(@player_1_marker)
       @game_board.print_board
